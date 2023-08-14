@@ -284,13 +284,29 @@
             color: white;
         }
 
+		.item-count-box {
+			background-color: var(--secondary-bg);
+			border-radius: 8px;
+			padding: 1rem;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			margin-top: -38rem;
+			margin-right: 70rem;
+		}
+		
+		.item-count-box h2 {
+			margin-bottom: 0.5rem;
+			color: var(--accent);
+			font-size: 1.5rem;
+		}
+
         /* Error box styles */
         #errorBox {
             display: none;
             background-color: #ffcccc;
             border-radius: 5px;
             padding: 0.5rem 1rem;
-            margin-top: 1rem;
+            margin-top: 35rem;
+			margin-right: 10rem;
             color: red;
             border: 1px solid #ff0000;
         }
@@ -326,6 +342,7 @@
             line-height: 20px;
             cursor: pointer;
         }
+		
     </style>
 </head>
 
@@ -367,6 +384,10 @@
             <!-- Generated using JavaScript -->
         </table>
     </div>
+	<div class="item-count-box">
+		<h2>Placed Crops</h2>
+		<div class="item-count-list"></div>
+	</div>
 
     <!-- Error box toast -->
     <div id="errorBox"></div>
@@ -431,6 +452,28 @@
 			});
 		}
 
+		function updateItemCountList() {
+		const itemCountList = document.querySelector('.item-count-list');
+		itemCountList.innerHTML = ''; // Clear the existing content
+	
+		items.forEach(item => {
+			const itemCount = document.querySelectorAll(`.${item.name}`).length;
+			let adjustedItemCount = itemCount;
+	
+			if (item.name === 'apples') {
+				adjustedItemCount = Math.floor(itemCount / 9);
+			} else if (item.name === 'blueberries') {
+				adjustedItemCount = Math.floor(itemCount / 4);
+			}
+	
+			if (adjustedItemCount > 0) {
+				const listItem = document.createElement('div');
+				listItem.textContent = `${item.name}: ${adjustedItemCount}`;
+				itemCountList.appendChild(listItem);
+			}
+		});
+	}
+
 
         function createGrid(rows, cols) {
             // Clear any existing cells first
@@ -469,6 +512,7 @@
 					cell.addEventListener('click', function() {
 						if (cell.classList.contains(selectedItem)) {
 							cell.classList.remove(selectedItem);
+							updateItemCountList();
 							const tooltip = cell.querySelector('.tooltip');
 							tooltip.textContent = "";
 							hideTooltip(tooltip);
@@ -653,6 +697,7 @@
 					tooltip.textContent = `${capitalizeFirstLetter(tooltip.textContent.split(' - ')[0])} - Effects: ${friendlyEffects.join(', ')}`;
 				}
 			});
+			updateItemCountList();
 		}
 
 
@@ -771,6 +816,7 @@
                 }
                 index++;
             });
+			updateItemCountList();
         }
 
         document.getElementById('saveLayout').addEventListener('click', function() {
@@ -792,6 +838,7 @@
                 tooltip.textContent = '';
                 hideTooltip(tooltip);
                 cell.style.removeProperty('--hover-color');
+				updateItemCountList();
             });
 
             const errorBox = document.getElementById('errorBox');
