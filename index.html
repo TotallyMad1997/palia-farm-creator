@@ -115,13 +115,13 @@
             border-color: var(--select-focus-border-color);
         }
 
-        #mainContainer {
-            display: flex;
-            flex-direction: row-reverse;
-            align-items: center;
-            flex-wrap: wrap;
-            max-width: 100%;
-        }
+		#mainContainer {
+			display: flex;
+			flex-direction: row-reverse;
+			align-items: flex-start;
+			justify-content: space-between;
+			max-width: 100%;
+		}
 
         table {
             border-collapse: collapse;
@@ -252,12 +252,14 @@
 		}
 
         /* Legend styling */
-        .legend {
-            background-color: var(--secondary-bg);
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+		.legend {
+			background-color: var(--secondary-bg);
+			border-radius: 8px;
+			padding: 1rem;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			flex-grow: 1; /* Allow legend to grow and take available space */
+			margin-right: 1rem; /* Add some space between legend and grid */
+		}
 
         .legend div {
             display: flex;
@@ -289,14 +291,15 @@
 			border-radius: 8px;
 			padding: 1rem;
 			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			margin-top: -38rem;
-			margin-right: 70rem;
+			flex-shrink: 0; /* Don't allow item-count-box to shrink */
+			width: 180px; /* Adjust the width as needed */
 		}
 		
 		.item-count-box h2 {
 			margin-bottom: 0.5rem;
 			color: var(--accent);
 			font-size: 1.5rem;
+			text-align: center;
 		}
 
         /* Error box styles */
@@ -376,17 +379,17 @@
         <span id="closeToast" class="closeToast">&times;</span>
     </div>
 
-    <div id="mainContainer">
-        <div class="legend">
-            <!-- Generated using JavaScript -->
-        </div>
-        <table id="interactiveTable">
-            <!-- Generated using JavaScript -->
-        </table>
-    </div>
-	<div class="item-count-box">
-		<h2>Placed Crops</h2>
-		<div class="item-count-list"></div>
+	<div id="mainContainer">
+		<div class="item-count-box">
+			<h2>Placed Crops</h2>
+			<div class="item-count-list"></div>
+		</div>
+		<div class="legend">
+			<!-- Generated using JavaScript -->
+		</div>
+		<table id="interactiveTable">
+			<!-- Generated using JavaScript -->
+		</table>
 	</div>
 
     <!-- Error box toast -->
