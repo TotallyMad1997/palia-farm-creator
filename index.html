@@ -121,6 +121,7 @@
 			align-items: flex-start;
 			justify-content: space-between;
 			max-width: 100%;
+			margin-left: 14rem;
 		}
 
         table {
@@ -308,7 +309,7 @@
             background-color: #ffcccc;
             border-radius: 5px;
             padding: 0.5rem 1rem;
-            margin-top: 35rem;
+            margin-top: 5rem;
 			margin-right: 10rem;
             color: red;
             border: 1px solid #ff0000;
@@ -516,6 +517,7 @@
 						if (cell.classList.contains(selectedItem)) {
 							cell.classList.remove(selectedItem);
 							updateItemCountList();
+							toggleWaterView();
 							const tooltip = cell.querySelector('.tooltip');
 							tooltip.textContent = "";
 							hideTooltip(tooltip);
