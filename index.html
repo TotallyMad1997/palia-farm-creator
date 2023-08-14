@@ -42,6 +42,11 @@
             --select-focus-border-color: #5c90a1;
         }
 
+		#toggleWaterView.active {
+			background-color: var(--button-hover-bg); /* Apply the same hover color as the button */
+			color: var(--button-text-color);
+		}
+		
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -241,6 +246,10 @@
             margin-right: 5px;
             font-size: 20px; /* slightly bigger font for the icons */
         }
+		
+		td.highlight {
+			background-color: rgba(255, 0, 0, 0.2); /* Faint red overlay */
+		}
 
         /* Legend styling */
         .legend {
@@ -338,6 +347,7 @@
             <button id="clearAll">Clear All</button>
             <button id="saveLayout">Save Current Layout</button>
             <button id="toggleTheme">Toggle Light Mode</button>
+			<button id="toggleWaterView">Toggle WaterView</button>
         </div>
     </header>
 
@@ -389,6 +399,39 @@
         const table = document.getElementById('interactiveTable');
         let selectedItem = null;
 
+		document.getElementById('toggleWaterView').addEventListener('click', function() {
+			const waterViewToggle = document.getElementById('toggleWaterView');
+			const waterViewEnabled = waterViewToggle.classList.toggle('active');
+		
+			if (waterViewEnabled) {
+				highlightTilesWithoutEffect('waterRetain');
+			} else {
+				removeHighlight();
+			}
+		});
+		
+		function highlightTilesWithoutEffect(effect) {
+			forEachCell((i, j) => {
+				const cell = table.rows[i].cells[j];
+				const tooltip = cell.querySelector('.tooltip');
+				const currentEffects = tooltip.dataset.effects ? tooltip.dataset.effects.split(',') : [];
+		
+				if (!currentEffects.includes(effect)) {
+					cell.classList.add('highlight');
+				} else {
+					cell.classList.remove('highlight');
+				}
+			});
+		}
+
+		function removeHighlight() {
+			forEachCell((i, j) => {
+				const cell = table.rows[i].cells[j];
+				cell.classList.remove('highlight');
+			});
+		}
+
+
         function createGrid(rows, cols) {
             // Clear any existing cells first
             while (table.firstChild) {
@@ -419,26 +462,32 @@
                         if (this.classList.length === 0) this.style.removeProperty('--hover-color');
                     });
 
-                    cell.addEventListener('click', function() {
-                        if (cell.classList.contains(selectedItem)) {
-                            cell.classList.remove(selectedItem);
-                            const tooltip = cell.querySelector('.tooltip');
-                            tooltip.textContent = "";
-                            hideTooltip(tooltip);
-                        } else {
-                            cell.className = ''; // Reset previous classes
-                            if (selectedItem) {
-                                cell.classList.add(selectedItem);
-                                const tooltip = cell.querySelector('.tooltip');
-                                tooltip.textContent = capitalizeFirstLetter(selectedItem);
-                                showTooltip(tooltip);
-                            }
-                        }
-                        cell.style.backgroundColor = "";
-
-                        // After making changes, recompute all effects on the grid.
-                        recomputeEffects();
-                    });
+					cell.addEventListener('click', function() {
+						if (cell.classList.contains(selectedItem)) {
+							cell.classList.remove(selectedItem);
+							const tooltip = cell.querySelector('.tooltip');
+							tooltip.textContent = "";
+							hideTooltip(tooltip);
+						} else {
+							cell.className = ''; // Reset previous classes
+							if (selectedItem) {
+								cell.classList.add(selectedItem);
+								const tooltip = cell.querySelector('.tooltip');
+								tooltip.textContent = capitalizeFirstLetter(selectedItem);
+								showTooltip(tooltip);
+							}
+						}
+						cell.style.backgroundColor = "";
+					
+						// After making changes, recompute all effects on the grid.
+						recomputeEffects();
+					
+						// Highlight tiles without 'waterRetain' effect after each click
+						const highlightCheckbox = document.getElementById('highlightCheckbox');
+						if (highlightCheckbox.checked) {
+							highlightTilesWithoutEffect('waterRetain');
+						}
+					});
 
                     // Initially set the tooltip to hidden.
                     hideTooltip(tooltip);
