@@ -447,17 +447,21 @@
                     cell.appendChild(tooltip);
 
                     cell.addEventListener('mouseover', function() {
-                        if (cell.classList.length > 0) {
+                        const cell = event.target.closest('td');
+						if (!cell || !selectedItem) return;
+					
+						const selectedItemColor = items.find(item => item.name === selectedItem).color;
+						cell.style.backgroundColor = `${selectedItemColor}60`; // Adding 60 opacity to the color
+						
+						if (cell.classList.length > 0) {
                             showTooltip(tooltip);
                         }
 
                         if (!selectedItem || this.classList.contains(selectedItem)) return;
-
-                        const selectedItemColor = items.find(item => item.name === selectedItem).color;
-                        this.style.setProperty('--hover-color', selectedItemColor);
                     });
 
                     cell.addEventListener('mouseout', function() {
+						cell.style.backgroundColor = ''; // Reset the background color
                         hideTooltip(tooltip);
                         if (this.classList.length === 0) this.style.removeProperty('--hover-color');
                     });
